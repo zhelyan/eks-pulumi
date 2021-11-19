@@ -1,0 +1,35 @@
+encryptionsalt: v1:SM/c2u4eS9k=:v1:RLWXzO8TdCuHNMyY:LT/Li1nuDlz1xx/oX4Z7iXaTiN06wg==
+config:
+  aws:region: eu-west-1
+  kubernetes:cluster: test-eks-controlplane
+  kubernetes:context: arn:aws:eks:eu-west-1:XXXXXXXXXXXX:cluster/test-eks-controlplane
+  kubernetes:namespaces:
+    - foo
+    - bar
+  kubernetes:managed_addons:
+    - vpc-cni
+    - coredns
+    - kube-proxy
+  kubernetes:managed_nodegroups:
+    ng1: # groups can span multiple AZs
+      subnet_ids:
+        eu-west-1a:
+          - subnet-xxxxxxx
+        eu-west-1b:
+          - subnet-yyyyyyy
+        eu-west-1c:
+          - subnet-zzzzzzz
+      options: # pass-through to eks.ManagedNodeGroup
+        scaling_config:
+          min_size: 1
+          max_size: 1
+          desired_size: 1
+        disk_size: 40
+        instance_types:
+          - m5.large
+  kubernetes:charts:
+    - name: wordpress
+      repo: bitnami
+      repo_url: https://charts.bitnami.com/bitnami
+      version: 12.1.0
+      namespace: foo
